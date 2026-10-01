@@ -1,6 +1,23 @@
 const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
 
 const app = express();
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'VagaSync - Vagas API',
+      version: '1.0.0',
+      description: 'API responsável pelo gerenciamento e monitoramento das vagas do VagaSync'
+    }
+  },
+  apis: ['./index.js']
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 const PORT = 3002;
 
 app.use(express.json());
@@ -43,10 +60,39 @@ const vagas = [
   }
 ];
 
+/**
+ * @swagger
+ * /vagas:
+ *   get:
+ *     summary: Lista todas as vagas
+ *     tags:
+ *       - Vagas
+ *     responses:
+ *       200:
+ *         description: Lista de vagas retornada com sucesso
+ */
 app.get('/vagas', (req, res) => {
   res.json(vagas);
 });
 
+/**
+ * @swagger
+ * /vagas/estacionamento/{estacionamentoId}:
+ *   get:
+ *     summary: Lista as vagas de um estacionamento
+ *     tags:
+ *       - Vagas
+ *     parameters:
+ *       - in: path
+ *         name: estacionamentoId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do estacionamento
+ *     responses:
+ *       200:
+ *         description: Vagas retornadas com sucesso
+ */
 app.get('/vagas/estacionamento/:estacionamentoId', (req, res) => {
   const estacionamentoId = Number(req.params.estacionamentoId);
 
@@ -57,6 +103,44 @@ app.get('/vagas/estacionamento/:estacionamentoId', (req, res) => {
   res.json(vagasDoEstacionamento);
 });
 
+/**
+ * @swagger
+ * /vagas/{id}/status:
+ *   put:
+ *     summary: Atualiza o status de uma vaga
+ *     description: Simula a atualização enviada por um sensor de ocupação.
+ *     tags:
+ *       - Vagas
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID da vaga
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - status
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum:
+ *                   - LIVRE
+ *                   - OCUPADA
+ *                 example: OCUPADA
+ *     responses:
+ *       200:
+ *         description: Status atualizado com sucesso
+ *       400:
+ *         description: Status inválido
+ *       404:
+ *         description: Vaga não encontrada
+ */
 app.put('/vagas/:id/status', (req, res) => {
   const id = Number(req.params.id);
 
@@ -83,6 +167,23 @@ app.put('/vagas/:id/status', (req, res) => {
   res.json(vaga);
 });
 
+/**
+ * @swagger
+ * /vagas/estacionamento/{estacionamentoId}/resumo:
+ *   get:
+ *     summary: Retorna o resumo de vagas de um estacionamento
+ *     tags:
+ *       - Vagas
+ *     parameters:
+ *       - in: path
+ *         name: estacionamentoId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Resumo retornado com sucesso
+ */
 app.get('/vagas/estacionamento/:estacionamentoId/resumo', (req, res) => {
   const estacionamentoId = Number(req.params.estacionamentoId);
 
@@ -108,6 +209,23 @@ app.get('/vagas/estacionamento/:estacionamentoId/resumo', (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * /vagas/estacionamento/{estacionamentoId}/resumo-setores:
+ *   get:
+ *     summary: Retorna a disponibilidade agrupada por setor
+ *     tags:
+ *       - Vagas
+ *     parameters:
+ *       - in: path
+ *         name: estacionamentoId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Resumo por setores retornado com sucesso
+ */
 app.get('/vagas/estacionamento/:estacionamentoId/resumo-setores', (req, res) => {
   const estacionamentoId = Number(req.params.estacionamentoId);
 
