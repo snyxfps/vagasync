@@ -91,6 +91,37 @@ app.delete('/estacionamentos/:id', (req, res) => {
   res.status(204).send();
 });
 
+app.get('/estacionamentos/:id/disponibilidade', async (req, res) => {
+  const id = Number(req.params.id);
+
+  const estacionamento = estacionamentos.find(
+    estacionamento => estacionamento.id === id
+  );
+
+  if (!estacionamento) {
+    return res.status(404).json({
+      mensagem: 'Estacionamento não encontrado'
+    });
+  }
+
+  try {
+    const resposta = await fetch(
+      `http://localhost:3002/vagas/estacionamento/${id}/resumo-setores`
+    );
+
+    const disponibilidade = await resposta.json();
+
+    res.json({
+      estacionamento,
+      disponibilidade
+    });
+  } catch (erro) {
+    res.status(503).json({
+      mensagem: 'Serviço de vagas temporariamente indisponível'
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Estacionamentos Service rodando na porta ${PORT}`);
 });
