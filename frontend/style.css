@@ -60,3 +60,27 @@ h2 {
   color: red;
   font-weight: bold;
 }
+
+.disponibilidade {
+  margin-top: 20px;
+}
+
+.setor {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 15px;
+  margin-top: 15px;
+}
+
+.setor h4 {
+  margin-bottom: 10px;
+}
+
+.resumo-vagas {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.resumo-vagas span {
+  font-size: 14px;
+}
