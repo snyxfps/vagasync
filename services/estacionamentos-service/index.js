@@ -24,6 +24,8 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const PORT = process.env.PORT || 3001;
+const VAGAS_SERVICE_URL =
+  process.env.VAGAS_SERVICE_URL || 'http://vagas:3002';
 
 app.use(express.json());
 
@@ -263,8 +265,8 @@ app.get('/estacionamentos/:id/disponibilidade', async (req, res) => {
 
   try {
     const resposta = await fetch(
-      `http://vagas:3002/vagas/estacionamento/${id}/resumo-setores`
-    );
+  `${VAGAS_SERVICE_URL}/vagas/estacionamento/${id}/resumo-setores`
+  );
 
     const disponibilidade = await resposta.json();
 
