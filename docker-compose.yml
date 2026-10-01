@@ -1,0 +1,10 @@
+services:
+  estacionamentos:
+    build: ./services/estacionamentos-service
+    ports:
+      - "3001:3001"
+
+  vagas:
+    build: ./services/vagas-service
+    ports:
+      - "3002:3002"

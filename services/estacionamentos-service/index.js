@@ -106,7 +106,7 @@ app.get('/estacionamentos/:id/disponibilidade', async (req, res) => {
 
   try {
     const resposta = await fetch(
-      `http://localhost:3002/vagas/estacionamento/${id}/resumo-setores`
+      `http://vagas:3002/vagas/estacionamento/${id}/resumo-setores`
     );
 
     const disponibilidade = await resposta.json();
